@@ -40,6 +40,8 @@ import Data.ByteString.UTF8 (fromString)
 
 import Paths_gitit (version, getDataFileName)
 
+import qualified Dot as PluginDot
+
 main :: IO ()
 main = do
 
@@ -88,6 +90,8 @@ main = do
 
   -- initialize state
   initializeGititState conf
+
+  updateGititState $ \s -> s { plugins = createPlugins }
 
   let serverConf = nullConf { validator = Nothing, port = portNumber conf,
                              timeout = 20, logAccess = Nothing }
@@ -168,3 +172,6 @@ handleFlag conf _ = conf
 
 putErr :: ExitCode -> String -> IO a
 putErr c s = B.hPutStrLn stderr (fromString s) >> exitWith c
+
+createPlugins :: [Plugin]
+createPlugins = [ PluginDot.plugin ]

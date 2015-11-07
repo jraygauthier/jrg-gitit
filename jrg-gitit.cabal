@@ -20,6 +20,11 @@ Executable           jrg-gitit
                      network-uri >= 2.6 && < 2.7, 
                      network >= 2.6
 
+  hs-source-dirs:    plugins
+  build-depends:     process,
+                     SHA,
+                     filepath
+
   extensions:        CPP
   ghc-options:       -Wall -threaded
   ghc-prof-options:  -fprof-auto-exported -rtsopts

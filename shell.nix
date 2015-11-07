@@ -4,8 +4,9 @@ let
 
   inherit (nixpkgs) pkgs;
 
-  f = { mkDerivation, base, bytestring, directory, gitit, hslogger
-      , mtl, network, network-uri, stdenv, utf8-string
+  f = { mkDerivation, base, bytestring, directory, filepath, gitit
+      , hslogger, mtl, network, network-uri, process, SHA, stdenv
+      , utf8-string
       }:
       mkDerivation {
         pname = "jrg-gitit";
@@ -14,8 +15,8 @@ let
         isLibrary = false;
         isExecutable = true;
         executableHaskellDepends = [
-          base bytestring directory gitit hslogger mtl network network-uri
-          utf8-string
+          base bytestring directory filepath gitit hslogger mtl network
+          network-uri process SHA utf8-string
         ];
         license = stdenv.lib.licenses.unfree;
       };
