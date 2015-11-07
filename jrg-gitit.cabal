@@ -1,0 +1,25 @@
+name:                jrg-gitit
+version:             0.1.0.0
+Cabal-version:       >= 1.8
+build-type:          Simple
+
+Source-repository head
+  type:          git
+  location:      git://github.com/jgm/gitit.git
+
+Executable           jrg-gitit
+  hs-source-dirs:    .
+  main-is:           jrg-gitit.hs
+  build-depends:     base >=3 && < 5,
+                     gitit,
+                     mtl,
+                     hslogger,
+                     bytestring,
+                     utf8-string,
+                     directory,
+                     network-uri >= 2.6 && < 2.7, 
+                     network >= 2.6
+
+  extensions:        CPP
+  ghc-options:       -Wall -threaded
+  ghc-prof-options:  -fprof-auto-exported -rtsopts
