@@ -4,3 +4,4 @@ templates/
 static/
 plugins/
 gitit.log
+.diagrams_cache/
