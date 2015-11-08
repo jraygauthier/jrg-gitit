@@ -14,8 +14,8 @@ plugins I use. This dependency is assumed to live alongside the current
 repository.
 
 
-How to develop
---------------
+Building and running
+--------------------
 
 In order to test the wiki:
 
