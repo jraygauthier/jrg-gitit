@@ -2,31 +2,21 @@
 
 let
 
-  inherit (nixpkgs) pkgs;
-
-  f = { mkDerivation, base, bytestring, directory, filepath, gitit
-      , hslogger, mtl, network, network-uri, process, SHA, stdenv
-      , utf8-string
-      }:
-      mkDerivation {
-        pname = "jrg-gitit";
-        version = "0.1.0.0";
-        src = ./.;
-        isLibrary = false;
-        isExecutable = true;
-        executableHaskellDepends = [
-          base bytestring directory filepath gitit hslogger mtl network
-          network-uri process SHA utf8-string
-        ];
-        license = stdenv.lib.licenses.unfree;
-      };
+  inherit (nixpkgs) pkgs lib;
 
   haskellPackages = if compiler == "default"
                        then pkgs.haskellPackages
                        else pkgs.haskell.packages.${compiler};
 
-  drv = haskellPackages.callPackage f {};
+
+  jrg-gitit-plugins = haskellPackages.callPackage ../jrg-gitit-plugins {};
+  drv = haskellPackages.callPackage ./. { inherit jrg-gitit-plugins; };
+  drvEnv = pkgs.haskell.lib.overrideCabal drv (attrs: {
+    executableSystemDepends = [ 
+      pkgs.graphviz 
+    ];
+  });
 
 in
 
-  if pkgs.lib.inNixShell then drv.env else drv
+  if pkgs.lib.inNixShell then drvEnv.env else drv
