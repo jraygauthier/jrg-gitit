@@ -5,3 +5,5 @@ static/
 plugins/
 gitit.log
 .diagrams_cache/
+.cabal-sandbox/
+cabal.sandbox.config

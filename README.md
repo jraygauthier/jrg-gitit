@@ -34,3 +34,32 @@ dependencies), you need to run the following command:
 cabal2nix . > ./default.nix
 ~~~
 
+Developping plugins profiting of incremental builds
+---------------------------------------------------
+
+The following will 
+
+ -  Launch the same nix environment as before but without the 
+    `jrg-gitit-plugins` dependency carefully adding `jrg-gitit-plugins`'s
+    own dependencies. 
+ -  It will then add `jrg-gitit-plugins` as a sandbox source.
+ -  It will install the missing dependencies (i.e: only `jrg-gitit-plugins`).
+ -  It will build your project.
+
+~~~
+nix-shell shell-alternate.nix
+cabal sandbox init
+cabal sandbox add-source ../jrg-gitit-plugins
+cabal install --only-dependencies
+cabal build
+~~~
+
+Now modify some `jrg-gitit-plugins` sources files.
+
+~~~
+cabal build
+~~~
+
+`cabal` will autodetect that `jrg-gitit-plugins`'s sources changed and
+rebuild it and the required parts of your project that needs rebuild.
+
