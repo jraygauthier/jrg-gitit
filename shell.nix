@@ -12,8 +12,15 @@ let
   jrg-gitit-plugins = haskellPackages.callPackage ../jrg-gitit-plugins {};
   drv = haskellPackages.callPackage ./. { inherit jrg-gitit-plugins; };
   drvEnv = pkgs.haskell.lib.overrideCabal drv (attrs: {
-    executableSystemDepends = [ 
-      pkgs.graphviz 
+    executableSystemDepends = with pkgs; [ 
+      curl
+      wget
+      graphviz
+      plantuml
+      ditaa
+      jre
+      diagrams-builder
+      texLiveFull
     ];
   });
 
