@@ -20,7 +20,9 @@ let
       ditaa
       jre
       diagrams-builder
-      texLiveFull
+      (texlive.combine {
+        inherit (texlive) scheme-small inconsolata helvetic texinfo fancyvrb cm-super;
+      })
     ];
   });
 

@@ -12,7 +12,6 @@ let
 
 
   jrg-gitit-plugins = haskellPackages.callPackage ../jrg-gitit-plugins {};
-  #drv = haskellPackages.callPackage ./. { /*inherit jrg-gitit-plugins;*/ jrg-gitit-plugins = null; };
   drv = haskellPackages.callPackage ./. { inherit jrg-gitit-plugins; };
 
   systemDepends = with pkgs; [ 
@@ -23,20 +22,32 @@ let
     ditaa
     jre
     diagrams-builder
-    texLiveFull
+    (texlive.combine {
+      inherit (texlive) scheme-small inconsolata helvetic texinfo fancyvrb cm-super;
+    })
+    imagemagick 
+    #imagemagickBig
+
+    cabal-install
   ];
 
+  
+  removedPkgs = [
+    jrg-gitit-plugins
+    haskellPackages.gitit
+  ];
 
-  drvDependsMinusLibs = subtractLists [jrg-gitit-plugins] (
-                        drv.nativeBuildInputs 
-                     ++ drv.propagatedNativeBuildInputs);
+  getPkgDepends = x: x.nativeBuildInputs ++ x.propagatedNativeBuildInputs;
 
 
-  removedLibsDepends = jrg-gitit-plugins.nativeBuildInputs
-                    ++ jrg-gitit-plugins.propagatedNativeBuildInputs;
+  removedPkgsDepends = concatMap getPkgDepends removedPkgs;
 
-  combinedDepends = unique(drvDependsMinusLibs
-                 ++ removedLibsDepends);
+
+  drvDependsMinusLibs = subtractLists removedPkgs (
+                        getPkgDepends drv ++ removedPkgsDepends);
+
+
+  combinedDepends = unique(drvDependsMinusLibs);
 
   isHaskellPkg = x: (x ? pname) && (x ? version) && (x ? env);
   isSystemPkg = x: !isHaskellPkg x;
@@ -45,7 +56,7 @@ let
   systemBuildInputs = systemDepends ++ 
     stdenv.lib.filter isSystemPkg combinedDepends;
 
-  ghcEnv = ghc.withPackages (p: haskellBuildInputs);
+  ghcEnv = haskellPackages.ghcWithHoogle (p: haskellBuildInputs);
 
   isGhcjs = false;
   ghcCommand = if isGhcjs then "ghcjs" else "ghc";
